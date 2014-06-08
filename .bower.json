@@ -1,0 +1,14 @@
+{
+  "name": "jhw-ng-upload",
+  "homepage": "https://github.com/zjutwyj/jhw-ng-upload",
+  "version": "1.1.1",
+  "_release": "1.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.1.1",
+    "commit": "dc317ef1845e9b24f72c2aa58e5497cf986ccc4c"
+  },
+  "_source": "git://github.com/zjutwyj/jhw-ng-upload.git",
+  "_target": "~*",
+  "_originalSource": "jhw-ng-upload"
+}

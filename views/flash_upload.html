@@ -1,0 +1,82 @@
+<div class="upload-header breadcrumbs">
+    <h5>flash管理</h5>
+    <i class="icon-remove upload-close" ng-click="cancel()">&nbsp;</i>
+</div>
+
+<div class="picupload-body modal-body" ng-controller="FlashUploadCtrl">
+
+    <form id="fileupload" name="fileupload"  method="POST" enctype="multipart/form-data"
+          data-ng-controller="FileUploadController" data-file-upload="upload_opts"
+          data-ng-class="{'fileupload-processing': processing() || loadingFiles}">
+        <!--图片添加栏-->
+        <div class=" fileupload-buttonbar form-group">
+            <div class="col-lg-4 col-md-4 col-sm-4" style="text-align: left">
+                <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>添加flash</span>
+                    <input type="file" name="files[]" multiple ng-disabled="disabled">
+                </span>
+                <span class="fileupload-process"></span>
+            </div>
+        </div>
+        <div class="hide fade" data-ng-class="{in: active(),show : active()}">
+            <div class="progress progress-striped active" data-file-upload-progress="progress()">
+                <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div>
+            </div>
+            <!-- The extended global progress state -->
+            <div class="progress-extended">&nbsp;</div>
+        </div>
+        <table class="table table-striped files ng-cloak" style="display:none;">
+            <tr ng-repeat="file in queue" ng-class="{'processing': file.$processing()}">
+                <td ng-switch data-on="!!file.thumbnailUrl">
+                    <div class="preview" data-ng-switch-when="true">
+                        <a data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery><img
+                                data-ng-src="{{file.thumbnailUrl}}" alt=""></a>
+                    </div>
+                    <div class="preview" data-ng-switch-default data-file-upload-preview="file"></div>
+                </td>
+                <td>
+                    <p class="name" data-ng-switch data-on="!!file.url">
+                        <span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+                            <a data-ng-switch-when="true" data-ng-href="{{file.url}}" title="{{file.name}}"
+                               download="{{file.name}}" data-gallery>{{file.name}}</a>
+                            <a data-ng-switch-default data-ng-href="{{file.url}}" title="{{file.name}}"
+                               download="{{file.name}}">{{file.name}}</a>
+                        </span>
+                        <span data-ng-switch-default>{{file.name}}</span>
+                    </p>
+                    <strong data-ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+                </td>
+                <td>
+                    <p class="size">{{file.size | formatFileSize}}</p>
+
+                    <div class="progress progress-striped active fade" data-ng-class="{pending: 'in'}[file.$state()]"
+                         data-file-upload-progress="file.$progress()">
+                        <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div>
+                    </div>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div class="row">
+        <!--flash展示区-->
+        <div>
+            <div class="col-lg-12 col-md-12 col-sm-12" style="padding:5px 0 0 24px;height:450px;">
+                <div class="wp-manage-panel-picture" ng-repeat="pic in pic_list | filter:{filename:searchText}">
+                    <div title="请点击下面的名称选取" tooltip="请点击下面的名称选取" class="img ui-draggable"   ng-mouseenter="pic_hover(pic)"
+                         ng-mouseleave="pic_hover(pic)">
+                        <div class="transparent-block" ng-show="pic.show_tool" ><i class="icon-trash" ng-click="pic_delete(pic,$index,$event)" tooltip="删除"></i></div>
+                        <embed width="105" height="105" allowscriptaccess="always" wmode="transparent" embed-src="{{API_END_POINT}}{{pic.server_path}}" />
+                        <label ng-show="pic.show_tool || pic.checked" class="checkbox-select" ng-click="checkbox_checked(pic,$event)">
+                            <input type="checkbox" class="ace" >
+                            <span class="lbl"></span>
+                        </label>
+                    </div>
+                    <p class="link" ng-click="select_pic(pic)">{{pic.filename}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

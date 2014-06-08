@@ -1,0 +1,149 @@
+<div ng-repeat="alert in alerts" class="msgtip" close="closeAlert($index)" ng-show="$last"><p
+        class="inner {{alert.type}}">{{alert.msg}}</p></div>
+<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+<div id="blueimp-gallery" class="blueimp-gallery">
+    <!-- The container for the modal slides -->
+    <div class="slides"></div>
+    <!-- Controls for the borderless lightbox -->
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    <!-- The modal dialog, which will be used to wrap the lightbox content -->
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body next"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left prev">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                        Previous
+                    </button>
+                    <button type="button" class="btn btn-primary next">
+                        Next
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="picupload-body modal-body row" ng-controller="FileUploadCtrl">
+    <form id="fileupload" name="fileupload" action="http://api.example.com/upload" method="POST"
+          enctype="multipart/form-data"
+          data-ng-controller="FileUploadController" data-file-upload="upload_opts"
+          data-ng-class="{'fileupload-processing': processing() || loadingFiles}">
+        <!--图片添加栏-->
+        <div class=" fileupload-buttonbar form-group">
+            <div class="col-lg-10 col-md-9 col-sm-9 col-xs-6">
+                <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>添加图片</span>
+                    <input type="file" name="files[]" multiple ng-disabled="disabled">
+                </span>
+                <span class="fileupload-process"></span>
+            </div>
+        </div>
+        <div class="hide fade" data-ng-class="{in: active(),show : active()}">
+            <div class="progress progress-striped active" data-file-upload-progress="progress()">
+                <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div>
+            </div>
+            <div class="progress-extended">&nbsp;</div>
+        </div>
+        <table class="table table-striped files ng-cloak" style="display:none;">
+            <tr ng-repeat="file in queue" ng-class="{'processing': file.$processing()}">
+                <td ng-switch data-on="!!file.thumbnailUrl">
+                    <div class="preview" data-ng-switch-when="true">
+                        <a data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery><img
+                                data-ng-src="{{file.thumbnailUrl}}" alt=""></a>
+                    </div>
+                    <div class="preview" data-ng-switch-default data-file-upload-preview="file"></div>
+                </td>
+                <td>
+                    <p class="name" data-ng-switch data-on="!!file.url">
+                        <span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+                            <a data-ng-switch-when="true" data-ng-href="{{file.url}}" title="{{file.name}}"
+                               download="{{file.name}}" data-gallery>{{file.name}}</a>
+                            <a data-ng-switch-default data-ng-href="{{file.url}}" title="{{file.name}}"
+                               download="{{file.name}}">{{file.name}}</a>
+                        </span>
+                        <span data-ng-switch-default>{{file.name}}</span>
+                    </p>
+                    <strong data-ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+                </td>
+                <td>
+                    <p class="size">{{file.size | formatFileSize}}</p>
+
+                    <div class="progress progress-striped active fade" data-ng-class="{pending: 'in'}[file.$state()]"
+                         data-file-upload-progress="file.$progress()">
+                        <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div>
+                    </div>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <ul id="wp-chooser-category-ul" class="pic-nav-ul gallery-ul">
+        <li class="local" ng-repeat="nav2 in cate_list" ng-mouseenter="cate_hover(nav2, $index)"
+            ng-mouseleave="cate_hover(nav2, $index)">
+            <div tag="" class="category-li">
+                <a ng-click="get_pic(nav2.album_id)" ng-show="!nav2.edit_show">{{nav2.name}}</a>
+                <input type="text" ng-show="nav2.edit_show" ng-model="nav2.name"
+                       ng-focus="nav2.edit_show" ng-blur="cate_edit_save(nav2)" class="cate_edit">
+            </div>
+            <div class="pic_cate_tool" ng-show="nav2.show_tool">
+                <a class="blue ng-scope" href="javascript:;" tooltip="修改分类"
+                   ng-click="cate_edit(nav2)">
+                    <i class="icon-pencil bigger-130"></i>
+                </a>
+                <a class="red ng-scope" href="javascript:;" tooltip="删除分类"
+                   ng-click="cate_delete(nav2,$index)">
+                    <i class="icon-trash bigger-130"></i>
+                </a>
+            </div>
+        </li>
+        <li>
+            <input ng-model="cateName" tooltip="添加相册分类" placeholder="相册分类" type="text" name="cate_ame"
+                   style="width:100px;height:20px;margin-top:3px;"> <a ng-click="add_cate()">添加</a>
+            <span class="input-icon input-icon-right">
+                    <input type="text" ng-model="searchText"
+                           style="width:50px;height:20px;margin-bottom:5px;"/>
+                    <i class="icon-search gray" style="font-size: 12px;top: 0;height: 20px;line-height: 20px;"></i>
+               </span>
+        </li>
+    </ul>
+
+
+    <div id="links">
+        <div ng-repeat="pic in pic_list | filter:{filename:searchText}" ng-mouseenter="pic_hover(pic)"
+             ng-mouseleave="pic_hover(pic)" class="links-div">
+            <a class="link-a" href="{{API_END_POINT}}{{pic.server_path}}" title="{{pic.filename}}" data-gallery>
+                <img imgcrop data-width='80' data-height="80" ng-src="{{API_END_POINT}}{{pic.thumbnail_path}}"
+                     alt="{{pic.filename}}">
+            </a>
+            <span class="transparent-block" ng-show="pic.show_tool">
+                   <i class="icon-trash" ng-click="pic_delete(pic,$index,$event)" tooltip="删除"></i>
+            </span>
+            <label ng-show="pic.show_tool || pic.checked" class="checkbox-select"
+                   ng-click="checkbox_checked(pic,$event)">
+                <input type="checkbox" class="ace">
+                <span class="lbl"></span>
+            </label>
+
+        </div>
+
+    </div>
+
+</div>
+
+
